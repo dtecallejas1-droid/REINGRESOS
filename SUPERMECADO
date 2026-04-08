@@ -1,0 +1,450 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body,div,span,p,td,th,button,input,select{font-family:'Segoe UI',system-ui,-apple-system,Arial,sans-serif;}
+.db{background:#eef1f5;}
+
+.hdr{background:linear-gradient(135deg,#1a3550 0%,#0d2035 100%);padding:12px 20px;display:flex;justify-content:space-between;align-items:center;}
+.hdr-left .t{color:#fff;font-size:16px;font-weight:700;letter-spacing:.01em;}
+.hdr-left .s{color:#7aafd4;font-size:12px;margin-top:3px;}
+.hdr-logos{display:flex;align-items:center;gap:12px;}
+.logo-img{height:40px;width:auto;border-radius:6px;background:#fff;padding:3px 6px;object-fit:contain;}
+.live-pill{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:#a0d4f0;font-size:11px;padding:5px 13px;border-radius:20px;margin-left:6px;}
+.live-dot{width:8px;height:8px;border-radius:50%;background:#2ecc71;animation:blink 1.4s infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.2;}}
+
+.filters{background:#fff;padding:9px 20px;border-bottom:1px solid #dde3ea;display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+.flbl{font-size:11px;font-weight:700;color:#4a5568;text-transform:uppercase;letter-spacing:.06em;}
+.pill{font-size:12px;padding:5px 14px;border-radius:20px;border:1px solid #d0d7df;background:#fff;color:#4a5568;cursor:pointer;font-weight:500;transition:all .15s;}
+.pill:hover:not(.on):not(.gr){background:#f0f4f8;border-color:#b0bcc8;}
+.pill.on{background:#1a3550;color:#fff;border-color:#1a3550;}
+.pill.gr{background:#2e7d32;color:#fff;border-color:#2e7d32;}
+.sep{width:1px;height:22px;background:#e2e6ea;flex-shrink:0;}
+
+.nav{display:flex;gap:0;background:#fff;border-bottom:2px solid #dde3ea;}
+.ntab{font-size:13px;padding:11px 20px;border:none;background:transparent;color:#6c7a8a;cursor:pointer;font-weight:500;border-bottom:2.5px solid transparent;margin-bottom:-2px;transition:all .15s;}
+.ntab:hover{color:#1a3550;background:#f8fafc;}
+.ntab.on{color:#1a3550;border-bottom-color:#1a3550;font-weight:700;background:#f8fafc;}
+.vp{display:none;}.vp.show{display:block;}
+
+.body{padding:14px 18px;}
+
+/* KPIs */
+.kgrid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin-bottom:14px;}
+.kcard{background:#fff;border-radius:10px;padding:14px 16px;border-left:4px solid #d0d7df;transition:transform .18s,box-shadow .18s;cursor:default;}
+.kcard:hover{transform:translateY(-2px);box-shadow:0 4px 16px rgba(0,0,0,.08);}
+.kcard.k1{border-left-color:#1a3550;}.kcard.k2{border-left-color:#c0392b;}.kcard.k3{border-left-color:#e67e22;}.kcard.k4{border-left-color:#27ae60;}.kcard.k5{border-left-color:#8e44ad;}
+.klbl{font-size:11px;font-weight:700;color:#6a7a8a;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;}
+.kval{font-size:24px;font-weight:700;line-height:1.1;}
+.kval.c1{color:#1a3550;}.kval.c2{color:#c0392b;}.kval.c3{color:#e67e22;}.kval.c4{color:#27ae60;}.kval.c5{color:#8e44ad;}
+.ksub{font-size:11px;color:#7a8a9a;margin-top:5px;line-height:1.4;}
+.kdelta{font-size:11px;font-weight:700;margin-top:4px;}
+.kdelta.up{color:#c0392b;}.kdelta.dn{color:#27ae60;}
+
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px;}
+.panel{background:#fff;border-radius:10px;padding:16px;}
+.pt{font-size:11px;font-weight:700;color:#4a5568;text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px;display:flex;align-items:center;gap:7px;}
+.pt-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+
+.alert{background:#fff8e6;border:1.5px solid #f39c12;border-radius:9px;padding:11px 15px;margin-bottom:14px;font-size:12px;color:#6d4c00;display:flex;gap:10px;align-items:flex-start;line-height:1.5;}
+.alert strong{color:#5a3d00;}
+
+/* Días */
+.day-wrap{display:flex;align-items:flex-end;gap:5px;height:100px;}
+.day-col{display:flex;flex-direction:column;align-items:center;flex:1;}
+.day-bar{width:100%;border-radius:5px 5px 0 0;transition:height .5s ease;}
+.day-lbl{font-size:11px;color:#5a6a7a;margin-top:5px;font-weight:500;}
+.day-val{font-size:11px;font-weight:700;color:#1a3550;margin-bottom:3px;}
+
+/* Conteo área */
+.cnt-wrap{display:flex;align-items:flex-end;gap:8px;height:85px;}
+.cnt-col{display:flex;flex-direction:column;align-items:center;flex:1;gap:4px;}
+.cnt-num{font-size:13px;font-weight:700;color:#1a3550;}
+.cnt-bar{width:100%;border-radius:5px 5px 0 0;}
+.cnt-lbl{font-size:10px;color:#5a6a7a;text-align:center;font-weight:600;}
+
+/* Tabla */
+.tbl{width:100%;border-collapse:collapse;}
+.tbl th{padding:9px 10px;border-bottom:2px solid #e2e6ea;font-size:11px;font-weight:700;color:#4a5568;text-transform:uppercase;letter-spacing:.04em;background:#f8fafc;text-align:left;}
+.tbl th.r{text-align:right;}
+.tbl td{padding:8px 10px;border-bottom:1px solid #f0f2f5;color:#1a3550;font-size:12px;}
+.tbl td.r{text-align:right;font-weight:700;}
+.tbl tr:hover td{background:#f5f8fc;}
+.tw{max-height:340px;overflow-y:auto;border-radius:7px;border:1px solid #e8edf2;}
+.tag{display:inline-block;font-size:11px;padding:3px 9px;border-radius:12px;font-weight:600;}
+.leg{display:flex;gap:14px;flex-wrap:wrap;font-size:11px;color:#4a5568;margin-bottom:10px;}
+.ld{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:4px;flex-shrink:0;}
+</style>
+
+<div class="db">
+  <!-- HEADER con logos reales -->
+  <div class="hdr">
+    <div class="hdr-left">
+      <div class="t">Sistema de Control de Reingresos — Calleja S.A. DE C.V. 2026</div>
+      <div class="s">Notas de Crédito · Febrero & Marzo 2026 · 152 registros</div>
+    </div>
+    <div class="hdr-logos">
+      <img id="logo-lactolac" class="logo-img" alt="Lactolac" style="height:42px;"/>
+      <img id="logo-yes" class="logo-img" alt="YES Yogurt" style="height:42px;"/>
+      <div class="live-pill"><span class="live-dot"></span>En vivo</div>
+    </div>
+  </div>
+
+  <!-- FILTROS -->
+  <div class="filters">
+    <span class="flbl">Mes</span>
+    <button class="pill gr on" onclick="setM('all',this)">Todos</button>
+    <button class="pill" onclick="setM('2026-02',this)">Febrero</button>
+    <button class="pill" onclick="setM('2026-03',this)">Marzo</button>
+    <div class="sep"></div>
+    <span class="flbl">Ruta</span>
+    <button class="pill on" id="rall" onclick="setR('all',this)">Todas</button>
+    <button class="pill" onclick="setR('SSM001',this)">SSM001</button>
+    <button class="pill" onclick="setR('SSM002',this)">SSM002</button>
+    <button class="pill" onclick="setR('SUP001',this)">SUP001</button>
+    <button class="pill" onclick="setR('SUP002',this)">SUP002</button>
+    <button class="pill" onclick="setR('SUP003',this)">SUP003</button>
+    <button class="pill" onclick="setR('SUP004',this)">SUP004</button>
+    <button class="pill" onclick="setR('SUP005',this)">SUP005</button>
+    <button class="pill" onclick="setR('SUP006',this)">SUP006</button>
+    <button class="pill" onclick="setR('SUP007',this)">SUP007</button>
+    <div class="sep"></div>
+    <span class="flbl">Área</span>
+    <button class="pill on" onclick="setA('all',this)">Todas</button>
+    <button class="pill" onclick="setA('Despacho',this)">Despacho</button>
+    <button class="pill" onclick="setA('Reparto',this)">Reparto</button>
+    <button class="pill" onclick="setA('Sistemas',this)">Sistemas</button>
+    <button class="pill" onclick="setA('Produccion',this)">Producción</button>
+    <button class="pill" onclick="setA('Digitador',this)">Digitador</button>
+  </div>
+
+  <div class="nav">
+    <button class="ntab on" onclick="showTab('res',this)">Resumen</button>
+    <button class="ntab" onclick="showTab('cmp',this)">Comparativa Feb vs Mar</button>
+    <button class="ntab" onclick="showTab('sala',this)">Por sala</button>
+    <button class="ntab" onclick="showTab('det',this)">Detalle NC</button>
+  </div>
+
+  <div class="body">
+
+    <div class="vp show" id="tab-res">
+      <div id="alrt"></div>
+      <div class="kgrid" id="kpis"></div>
+      <div class="row3">
+        <div class="panel">
+          <div class="pt"><span class="pt-dot" style="background:#c0392b;"></span>NC por día de semana</div>
+          <div class="day-wrap" id="days"></div>
+        </div>
+        <div class="panel">
+          <div class="pt"><span class="pt-dot" style="background:#1a3550;"></span>Distribución por área ($)</div>
+          <div style="position:relative;height:135px;"><canvas id="cPie"></canvas></div>
+        </div>
+        <div class="panel">
+          <div class="pt"><span class="pt-dot" style="background:#e67e22;"></span>Recuento NC por área</div>
+          <div class="cnt-wrap" id="cnts"></div>
+        </div>
+      </div>
+      <div class="row2">
+        <div class="panel">
+          <div class="pt"><span class="pt-dot" style="background:#1a3550;"></span>Valor NC por área responsable</div>
+          <div style="position:relative;height:200px;"><canvas id="cArea"></canvas></div>
+        </div>
+        <div class="panel">
+          <div class="pt"><span class="pt-dot" style="background:#e67e22;"></span>Valor NC por motivo</div>
+          <div style="position:relative;height:200px;"><canvas id="cMot"></canvas></div>
+        </div>
+      </div>
+      <div class="panel" style="margin-bottom:10px;">
+        <div class="pt"><span class="pt-dot" style="background:#2980b9;"></span>Valor y recuento por ruta</div>
+        <div style="position:relative;height:185px;"><canvas id="cRuta"></canvas></div>
+      </div>
+    </div>
+
+    <div class="vp" id="tab-cmp">
+      <div class="row2">
+        <div class="panel">
+          <div class="pt"><span class="pt-dot" style="background:#1a3550;"></span>Valor total NC — Feb vs Mar</div>
+          <div style="position:relative;height:220px;"><canvas id="cCmpV"></canvas></div>
+        </div>
+        <div class="panel">
+          <div class="pt"><span class="pt-dot" style="background:#c0392b;"></span>Recuento NC — Feb vs Mar</div>
+          <div style="position:relative;height:220px;"><canvas id="cCmpC"></canvas></div>
+        </div>
+      </div>
+      <div class="row2">
+        <div class="panel">
+          <div class="pt"><span class="pt-dot" style="background:#e67e22;"></span>Motivos por mes (valor $)</div>
+          <div style="position:relative;height:230px;"><canvas id="cCmpM"></canvas></div>
+        </div>
+        <div class="panel">
+          <div class="pt"><span class="pt-dot" style="background:#27ae60;"></span>Áreas por mes (recuento NC)</div>
+          <div style="position:relative;height:230px;"><canvas id="cCmpA"></canvas></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="vp" id="tab-sala">
+      <div class="panel">
+        <div class="pt"><span class="pt-dot" style="background:#1a3550;"></span>Resumen por sala — valor reingresado y % del total</div>
+        <div class="tw">
+          <table class="tbl"><thead><tr>
+            <th>Sala</th><th>Ruta</th><th>Área</th><th class="r">Valor NC</th><th class="r">% total</th><th class="r">NC</th><th>Indicador</th>
+          </tr></thead><tbody id="sala-tb"></tbody></table>
+        </div>
+      </div>
+    </div>
+
+    <div class="vp" id="tab-det">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:10px;">
+        <input type="text" id="srch" placeholder="Buscar sala, motivo, área, municipio..." style="font-size:13px;padding:8px 14px;border-radius:8px;border:1.5px solid #d0d7df;color:#1a3550;width:300px;" oninput="rDet()">
+        <div style="display:flex;gap:10px;align-items:center;">
+          <select id="sort-sel" onchange="rDet()" style="font-size:12px;padding:7px 12px;border-radius:8px;border:1.5px solid #d0d7df;color:#1a3550;">
+            <option value="fecha-desc">Fecha ↓ reciente</option>
+            <option value="valor-desc">Valor ↓ mayor</option>
+            <option value="valor-asc">Valor ↑ menor</option>
+          </select>
+          <span style="font-size:12px;font-weight:700;padding:5px 14px;border-radius:14px;background:#e8eef4;color:#1a3550;" id="dcnt">0 registros</span>
+        </div>
+      </div>
+      <div class="tw">
+        <table class="tbl"><thead><tr>
+          <th>Fecha</th><th>Sala</th><th>Ruta</th><th>Motivo</th><th>Área</th><th>Municipio</th><th class="r">Valor NC</th>
+        </tr></thead><tbody id="det-tb"></tbody></table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+// ── LOGOS ──────────────────────────────────────────────
+(async()=>{
+  const toB64=async(path,mime)=>{
+    try{const r=await fetch(path);const buf=await r.arrayBuffer();
+    const b=btoa(String.fromCharCode(...new Uint8Array(buf)));
+    return `data:${mime};base64,${b}`;}catch(e){return '';}
+  };
+  // Los logos se inyectarán vía storage si están disponibles, si no se usa una versión SVG
+  document.getElementById('logo-lactolac').onerror=()=>{document.getElementById('logo-lactolac').style.display='none';};
+  document.getElementById('logo-yes').onerror=()=>{document.getElementById('logo-yes').style.display='none';};
+})();
+
+// Cargar logos desde storage persistente
+(async()=>{
+  try{
+    const lL=await window.storage.get('logo_lactolac');
+    const lY=await window.storage.get('logo_yes');
+    if(lL?.value)document.getElementById('logo-lactolac').src=lL.value;
+    if(lY?.value)document.getElementById('logo-yes').src=lY.value;
+  }catch(e){}
+})();
+
+// ── DATA ───────────────────────────────────────────────
+const DATA=[{"mes":"2026-02","fecha":"2026-02-05","dow":3,"sala":"SELECTOS SANTA ROSA DE LIMA II","ruta":"SSM001","motivo":"Error en orden de Compra","area":"Despacho","municipio":"SANTA ROSA DE LIMA","valor":72.0},{"mes":"2026-02","fecha":"2026-02-05","dow":3,"sala":"SELECTOS CIUDAD DELGADO","ruta":"SUP006","motivo":"Reingreso por Despacho","area":"Despacho","municipio":"CIUDAD DELGADO","valor":5.49},{"mes":"2026-02","fecha":"2026-02-05","dow":3,"sala":"SUPER SELECTOS PLAZA MUNDO APOPA","ruta":"SUP006","motivo":"Reingreso por Ventas","area":"Despacho","municipio":"APOPA","valor":147.67},{"mes":"2026-02","fecha":"2026-02-05","dow":3,"sala":"SELECTOS SAN MIGUEL TERMINAL","ruta":"SSM002","motivo":"Errores en la Toma de Pedidos","area":"Despacho","municipio":"SAN MIGUEL","valor":2.87},{"mes":"2026-02","fecha":"2026-02-05","dow":3,"sala":"SUPER SELECTOS CHALATENANGO","ruta":"SUP007","motivo":"Errores en la Toma de Pedidos","area":"Despacho","municipio":"CHALATENANGO","valor":2.52},{"mes":"2026-02","fecha":"2026-02-05","dow":3,"sala":"SELECTOS MASFERRER","ruta":"SUP003","motivo":"Reingreso por Ventas","area":"Despacho","municipio":"SAN SALVADOR","valor":10.98},{"mes":"2026-02","fecha":"2026-02-05","dow":3,"sala":"SUPER SELECTOS LIBERTAD","ruta":"SUP002","motivo":"Reingreso por Despacho","area":"Despacho","municipio":"LA LIBERTAD","valor":140.39},{"mes":"2026-02","fecha":"2026-02-05","dow":3,"sala":"SELECTOS METROCENTRO","ruta":"SUP004","motivo":"Reingreso por Ventas","area":"Despacho","municipio":"SAN SALVADOR","valor":38.51},{"mes":"2026-02","fecha":"2026-02-05","dow":3,"sala":"SELECTOS MERLIOT II","ruta":"SUP002","motivo":"Reingreso por Ventas","area":"Despacho","municipio":"SANTA TECLA","valor":461.31},{"mes":"2026-02","fecha":"2026-02-05","dow":3,"sala":"SELECTOS SONSONATE III","ruta":"SUP001","motivo":"Reingreso por Despacho","area":"Despacho","municipio":"SONSONATE","valor":17.4},{"mes":"2026-02","fecha":"2026-02-05","dow":3,"sala":"SUP. SELECT. OPICO EL ENCUENTRO","ruta":"SUP002","motivo":"Reingreso por Ventas","area":"Despacho","municipio":"SAN JUAN OPICO","valor":15.46},{"mes":"2026-02","fecha":"2026-02-06","dow":4,"sala":"SELECTOS SAN BARTOLO","ruta":"SUP006","motivo":"Reingreso por Ventas","area":"Digitador","municipio":"ILOPANGO","valor":196.35},{"mes":"2026-02","fecha":"2026-02-06","dow":4,"sala":"SELECTOS PLAZA MUNDO","ruta":"SUP006","motivo":"Reingreso por Ventas","area":"Despacho","municipio":"SOYAPANGO","valor":6.51},{"mes":"2026-02","fecha":"2026-02-06","dow":4,"sala":"SELECTOS SAN MARTIN","ruta":"SUP006","motivo":"Producto Dañado","area":"Despacho","municipio":"SAN MARTIN","valor":4.78},{"mes":"2026-02","fecha":"2026-02-09","dow":0,"sala":"SELECTOS AHUACHAPAN","ruta":"SUP001","motivo":"Reingreso por Despacho","area":"Despacho","municipio":"AHUACHAPAN","valor":60.27},{"mes":"2026-02","fecha":"2026-02-09","dow":0,"sala":"SUPER SELECTOS AHUACHAPAN II","ruta":"SUP001","motivo":"Reingreso por Calidad","area":"Produccion","municipio":"AHUACHAPAN","valor":8.0},{"mes":"2026-02","fecha":"2026-02-09","dow":0,"sala":"SELECTOS SAN MIGUEL BARRIOS","ruta":"SSM002","motivo":"Reingreso por Transporte","area":"Reparto","municipio":"SAN MIGUEL","valor":60.27},{"mes":"2026-02","fecha":"2026-02-09","dow":0,"sala":"SELECTOS SANTA ANA COLON","ruta":"SUP001","motivo":"Reingreso por Despacho","area":"Despacho","municipio":"SANTA ANA","valor":2.6},{"mes":"2026-02","fecha":"2026-02-09","dow":0,"sala":"SELECTOS SONSONATE II","ruta":"SUP001","motivo":"Reingreso por Despacho","area":"Despacho","municipio":"SONSONATE","valor":3.9},{"mes":"2026-02","fecha":"2026-02-09","dow":0,"sala":"SELECTOS SONSONATE III","ruta":"SUP001","motivo":"Reingreso por Calidad","area":"Produccion","municipio":"SONSONATE","valor":2.52},{"mes":"2026-02","fecha":"2026-02-09","dow":0,"sala":"SELECTOS ESCALON","ruta":"SUP003","motivo":"Reingreso por Ventas","area":"Digitador","municipio":"SAN SALVADOR","valor":14.69},{"mes":"2026-02","fecha":"2026-02-10","dow":1,"sala":"SELECTOS SAN MIGUEL CENTRO","ruta":"SSM002","motivo":"Reingreso por Transporte","area":"Reparto","municipio":"SAN MIGUEL","valor":1.11},{"mes":"2026-02","fecha":"2026-02-12","dow":3,"sala":"SELECTOS SAN MIGUEL PLAZA VIVA","ruta":"SSM002","motivo":"Reingreso por Despacho","area":"Despacho","municipio":"SAN MIGUEL","valor":7.32},{"mes":"2026-02","fecha":"2026-02-12","dow":3,"sala":"SUPER SELECTOS AHUACHAPAN II","ruta":"SUP001","motivo":"Reingreso por Transporte","area":"Reparto","municipio":"AHUACHAPAN","valor":6.51},{"mes":"2026-02","fecha":"2026-02-12","dow":3,"sala":"S. SELECTOS EL ENCUENTRO EL SITIO","ruta":"SSM002","motivo":"Reingreso por Ventas","area":"Digitador","municipio":"OPICO","valor":58.76},{"mes":"2026-02","fecha":"2026-02-12","dow":3,"sala":"SUPER SELECTOS CHALATENANGO","ruta":"SUP007","motivo":"No Entregado por Repartidor","area":"Reparto","municipio":"CHALATENANGO","valor":10.98},{"mes":"2026-02","fecha":"2026-02-12","dow":3,"sala":"SELECTOS SANTIAGO DE MARIA","ruta":"SSM001","motivo":"Reingreso por Ventas","area":"Digitador","municipio":"SANTIAGO DE MARIA","valor":395.41},{"mes":"2026-02","fecha":"2026-02-12","dow":3,"sala":"SUPER SELECTOS CHALATENANGO","ruta":"SUP007","motivo":"No Entregado por Repartidor","area":"Reparto","municipio":"CHALATENANGO","valor":19.1},{"mes":"2026-02","fecha":"2026-02-12","dow":3,"sala":"SELECTOS SONSONATE III","ruta":"SUP001","motivo":"Reingreso por Despacho","area":"Despacho","municipio":"SONSONATE","valor":19.26},{"mes":"2026-02","fecha":"2026-02-16","dow":0,"sala":"S. SELECTOS SAN MARCOS EL ENCUENTRO","ruta":"SUP005","motivo":"Errores en la Toma de Pedidos","area":"Despacho","municipio":"SAN MARCOS","valor":41.29},{"mes":"2026-02","fecha":"2026-02-16","dow":0,"sala":"SELECTOS NOVOCENTRO","ruta":"SUP002","motivo":"Reingreso por Transporte","area":"Reparto","municipio":"SAN SALVADOR","valor":23.19},{"mes":"2026-02","fecha":"2026-02-16","dow":0,"sala":"SELECTOS CENTRO ANTEL","ruta":"SUP005","motivo":"Reingreso por Transporte","area":"Reparto","municipio":"SAN SALVADOR","valor":11.66},{"mes":"2026-02","fecha":"2026-02-16","dow":0,"sala":"S. SELECTOS EL ENCUENTRO EL SITIO","ruta":"SSM002","motivo":"Error en orden de Compra","area":"Calleja","municipio":"OPICO","valor":14.64},{"mes":"2026-02","fecha":"2026-02-16","dow":0,"sala":"SELECTOS SANTA ANA METROCENTRO","ruta":"SUP001","motivo":"Reingreso por Calidad","area":"Produccion","municipio":"SANTA ANA","valor":1.3},{"mes":"2026-02","fecha":"2026-02-19","dow":3,"sala":"SELECTOS SONSONATE III","ruta":"SUP001","motivo":"Reingreso por Despacho","area":"Despacho","municipio":"SONSONATE","valor":2.6},{"mes":"2026-02","fecha":"2026-02-19","dow":3,"sala":"SELECTOS LOURDES II","ruta":"SUP002","motivo":"Reingreso por Ventas","area":"Reparto","municipio":"LOURDES","valor":44.07},{"mes":"2026-02","fecha":"2026-02-19","dow":3,"sala":"SUPER SELECTOS CHALCHUAPA","ruta":"SUP001","motivo":"Reingreso por Calidad","area":"Produccion","municipio":"CHALCHUAPA","valor":2.6},{"mes":"2026-02","fecha":"2026-02-19","dow":3,"sala":"S. SELECTOS SANTA TECLA LAS RAMBLAS","ruta":"SUP002","motivo":"Reingreso por Despacho","area":"Despacho","municipio":"SANTA TECLA","valor":19.93},{"mes":"2026-02","fecha":"2026-02-23","dow":0,"sala":"SELECTOS SANTIAGO DE MARIA","ruta":"SSM001","motivo":"Reingreso por Transporte","area":"Despacho","municipio":"SANTIAGO DE MARIA","valor":51.12},{"mes":"2026-02","fecha":"2026-02-23","dow":0,"sala":"SELECTOS LAS CASCADAS","ruta":"SUP003","motivo":"Producto Dañado","area":"Despacho","municipio":"SAN SALVADOR","valor":2.17},{"mes":"2026-02","fecha":"2026-02-23","dow":0,"sala":"S. SELECTOS SAN MIGUEL PANAMERICANA","ruta":"SSM002","motivo":"Reingreso por Transporte","area":"Despacho","municipio":"SAN MIGUEL","valor":1.65},{"mes":"2026-02","fecha":"2026-02-23","dow":0,"sala":"SUPER SELECTOS CHALCHUAPA","ruta":"SUP001","motivo":"Reingreso por Calidad","area":"Produccion","municipio":"CHALCHUAPA","valor":1.3},{"mes":"2026-02","fecha":"2026-02-23","dow":0,"sala":"SELECTOS AUTOPISTA SUR","ruta":"SUP003","motivo":"Reingreso por Despacho","area":"Despacho","municipio":"SAN SALVADOR","valor":8.62},{"mes":"2026-02","fecha":"2026-02-23","dow":0,"sala":"SELECTOS LA SULTANA","ruta":"SUP003","motivo":"Reingreso por Transporte","area":"Reparto","municipio":"USULUTAN","valor":11.66},{"mes":"2026-02","fecha":"2026-02-23","dow":0,"sala":"SELECTOS MERLIOT II","ruta":"SUP002","motivo":"Reingreso por Despacho","area":"Despacho","municipio":"SANTA TECLA","valor":1.3},{"mes":"2026-02","fecha":"2026-02-23","dow":0,"sala":"SUPER SELECTOS OLOCUILTA LA ESTACIO","ruta":"SUP005","motivo":"Reingreso por Despacho","area":"Despacho","municipio":"OLOCUILTA","valor":2.17},{"mes":"2026-02","fecha":"2026-02-26","dow":3,"sala":"SELECTOS EL ENCUENTRO","ruta":"SUP002","motivo":"Producto Dañado","area":"Despacho","municipio":"SAN SALVADOR","valor":1.3},{"mes":"2026-02","fecha":"2026-02-26","dow":3,"sala":"SELECTOS SAN MIGUEL TERMINAL","ruta":"SSM002","motivo":"Reingreso por Calidad","area":"Produccion","municipio":"SAN MIGUEL","valor":2.87},{"mes":"2026-02","fecha":"2026-02-26","dow":3,"sala":"SUP.SEL. SONSONATE EL ENCUENTRO","ruta":"SUP001","motivo":"Reingreso por Calidad","area":"Produccion","municipio":"SONSONATE","valor":3.9},{"mes":"2026-02","fecha":"2026-02-26","dow":3,"sala":"SELECTOS MEGA SELECTOS","ruta":"SUP006","motivo":"Producto Dañado","area":"Despacho","municipio":"SAN SALVADOR","valor":3.9},{"mes":"2026-02","fecha":"2026-02-26","dow":3,"sala":"SELECTOS LAS PALMAS","ruta":"SUP002","motivo":"No Solicitado por Cliente","area":"Despacho","municipio":"LA LIBERTAD","valor":2.34},{"mes":"2026-02","fecha":"2026-02-26","dow":3,"sala":"SELECTOS NOVOCENTRO","ruta":"SUP002","motivo":"Producto Dañado","area":"Despacho","municipio":"SAN SALVADOR","valor":1.53},{"mes":"2026-02","fecha":"2026-02-26","dow":3,"sala":"SUPER SELECTOS ILOBASCO II","ruta":"SUP007","motivo":"Reingreso por Transporte","area":"Despacho","municipio":"ILOBASCO","valor":1.53},{"mes":"2026-02","fecha":"2026-02-26","dow":3,"sala":"SELECTOS SANTIAGO DE MARIA","ruta":"SSM001","motivo":"Reingreso por Ventas","area":"Digitador","municipio":"SANTIAGO DE MARIA","valor":51.12},{"mes":"2026-02","fecha":"2026-02-26","dow":3,"sala":"SUPER SELECTOS CHALATENANGO","ruta":"SUP007","motivo":"Reingreso por Transporte","area":"Reparto","municipio":"CHALATENANGO","valor":69.46},{"mes":"2026-02","fecha":"2026-02-26","dow":3,"sala":"SELECTOS SONSONATE III","ruta":"SUP001","motivo":"Reingreso por Despacho","area":"Despacho","municipio":"SONSONATE","valor":2.6},{"mes":"2026-02","fecha":"2026-02-26","dow":3,"sala":"SELECTOS CENTRO ANTEL","ruta":"SUP003","motivo":"Reingreso por Despacho","area":"Despacho","municipio":"SAN SALVADOR","valor":3.46},{"mes":"2026-02","fecha":"2026-02-26","dow":3,"sala":"SUPER SELECTOS LIBERTAD","ruta":"SUP002","motivo":"Reingreso por Transporte","area":"Reparto","municipio":"LA LIBERTAD","valor":38.41},{"mes":"2026-02","fecha":"2026-02-26","dow":3,"sala":"SELECTOS MASFERRER","ruta":"SUP003","motivo":"Reingreso por Despacho","area":"Despacho","municipio":"SAN SALVADOR","valor":5.49},{"mes":"2026-03","fecha":"2026-03-02","dow":0,"sala":"SELECTOS SAN MIGUEL CENTRO","ruta":"SSM002","motivo":"Reingreso por Transporte","area":"Reparto","municipio":"SAN MIGUEL","valor":1.11},{"mes":"2026-03","fecha":"2026-03-02","dow":0,"sala":"SUPER SELECTOS SAN GABRIEL","ruta":"SUP004","motivo":"Reingreso por Despacho","area":"Despacho","municipio":"NEJAPA","valor":1.53},{"mes":"2026-03","fecha":"2026-03-02","dow":0,"sala":"SUPER SELECTOS ARMENIA EL ENCUENTRO","ruta":"SUP001","motivo":"Reingreso por Transporte","area":"Despacho","municipio":"ARMENIA","valor":11.66},{"mes":"2026-03","fecha":"2026-03-02","dow":0,"sala":"SUPER SELECTOS CHALATENANGO","ruta":"SUP007","motivo":"Producto Dañado","area":"Despacho","municipio":"CHALATENANGO","valor":2.87},{"mes":"2026-03","fecha":"2026-03-02","dow":0,"sala":"SELECTOS AGUILARES","ruta":"SUP007","motivo":"Reingreso por Transporte","area":"Reparto","municipio":"AGUILARES","valor":64.07},{"mes":"2026-03","fecha":"2026-03-02","dow":0,"sala":"SELECTOS LOS SANTOS #21","ruta":"SUP004","motivo":"Reingreso por Ventas","area":"Reparto","municipio":"SAN SALVADOR","valor":13.29},{"mes":"2026-03","fecha":"2026-03-02","dow":0,"sala":"SUPER SELECTOS PLAZA MUNDO APOPA","ruta":"SUP006","motivo":"Reingreso por Despacho","area":"Despacho","municipio":"APOPA","valor":3.3},{"mes":"2026-03","fecha":"2026-03-02","dow":0,"sala":"SELECTOS MERLIOT II","ruta":"SUP002","motivo":"Reingreso por Despacho","area":"Despacho","municipio":"SANTA TECLA","valor":1.53},{"mes":"2026-03","fecha":"2026-03-02","dow":0,"sala":"SELECTOS BETHOVEN","ruta":"SUP003","motivo":"Reingreso por Despacho","area":"Despacho","municipio":"SAN SALVADOR","valor":6.51},{"mes":"2026-03","fecha":"2026-03-02","dow":0,"sala":"SELECTOS SANTA ANA CENTRO","ruta":"SUP001","motivo":"Reingreso por Despacho","area":"Despacho","municipio":"SANTA ANA","valor":12.88},{"mes":"2026-03","fecha":"2026-03-05","dow":3,"sala":"SUP. SELECT. SAN FRANCISCO GOTERA","ruta":"SSM001","motivo":"Diferencia de Precios","area":"Sistemas","municipio":"SAN FRANCISCO GOTERA","valor":3635.73},{"mes":"2026-03","fecha":"2026-03-05","dow":3,"sala":"SUP. SELECT. SAN FRANCISCO GOTERA","ruta":"SSM001","motivo":"Diferencia de Precios","area":"Sistemas","municipio":"SAN FRANCISCO GOTERA","valor":4116.35},{"mes":"2026-03","fecha":"2026-03-05","dow":3,"sala":"SUP. SELECT. SAN FRANCISCO GOTERA","ruta":"SSM001","motivo":"Diferencia de Precios","area":"Sistemas","municipio":"SAN FRANCISCO GOTERA","valor":3642.78},{"mes":"2026-03","fecha":"2026-03-05","dow":3,"sala":"SUP. SELECT. SAN FRANCISCO GOTERA","ruta":"SSM001","motivo":"Diferencia de Precios","area":"Sistemas","municipio":"SAN FRANCISCO GOTERA","valor":3479.79},{"mes":"2026-03","fecha":"2026-03-05","dow":3,"sala":"SUPER SELECTOS CHALCHUAPA","ruta":"SUP001","motivo":"Reingreso por Calidad","area":"Produccion","municipio":"CHALCHUAPA","valor":1.53},{"mes":"2026-03","fecha":"2026-03-05","dow":3,"sala":"SELECTOS USULUTAN","ruta":"SSM001","motivo":"Reingreso por Transporte","area":"Reparto","municipio":"USULUTAN","valor":23.19},{"mes":"2026-03","fecha":"2026-03-09","dow":0,"sala":"SUPER SELECTOS LA UNION II","ruta":"SSM001","motivo":"No Solicitado por Cliente","area":"Digitador","municipio":"LA UNION","valor":4.47},{"mes":"2026-03","fecha":"2026-03-09","dow":0,"sala":"SELECTOS CIUDAD REAL","ruta":"SUP001","motivo":"Devolución por Averias","area":"Despacho","municipio":"CIUDAD REAL","valor":1.53},{"mes":"2026-03","fecha":"2026-03-09","dow":0,"sala":"SUPER SELECTOS CHALATENANGO","ruta":"SUP007","motivo":"No Entregado por Repartidor","area":"Reparto","municipio":"CHALATENANGO","valor":38.41},{"mes":"2026-03","fecha":"2026-03-09","dow":0,"sala":"SUPER SELECTOS CHALCHUAPA","ruta":"SUP001","motivo":"Producto Dañado","area":"Despacho","municipio":"CHALCHUAPA","valor":1.6},{"mes":"2026-03","fecha":"2026-03-09","dow":0,"sala":"SUPER SELECTOS LA UNION II","ruta":"SSM001","motivo":"Producto Dañado","area":"Despacho","municipio":"LA UNION","valor":1.53},{"mes":"2026-03","fecha":"2026-03-09","dow":0,"sala":"SUPER SELECTOS LA LIBERTAD EL ENCUE","ruta":"SUP002","motivo":"Reingreso por Transporte","area":"Reparto","municipio":"LA LIBERTAD","valor":19.93},{"mes":"2026-03","fecha":"2026-03-09","dow":0,"sala":"SELECTOS LOURDES II","ruta":"SUP002","motivo":"Reingreso por Ventas","area":"Despacho","municipio":"LOURDES","valor":3.05},{"mes":"2026-03","fecha":"2026-03-09","dow":0,"sala":"SUPER SELECTOS SAN GABRIEL","ruta":"SUP004","motivo":"Reingreso por Despacho","area":"Despacho","municipio":"SAN GABRIEL","valor":2.52},{"mes":"2026-03","fecha":"2026-03-09","dow":0,"sala":"SUP. SELECT. OPICO EL ENCUENTRO","ruta":"SUP002","motivo":"Reingreso por Despacho","area":"Despacho","municipio":"OPICO","valor":3.05},{"mes":"2026-03","fecha":"2026-03-09","dow":0,"sala":"SELECTOS ESCALON","ruta":"SUP003","motivo":"Reingreso por Despacho","area":"Despacho","municipio":"ESCALON","valor":7.05},{"mes":"2026-03","fecha":"2026-03-09","dow":0,"sala":"SUPER SEL. AGUILARES EL ENCUENTRO","ruta":"SUP007","motivo":"Reingreso por Calidad","area":"Produccion","municipio":"AGUILARES","valor":39.87},{"mes":"2026-03","fecha":"2026-03-09","dow":0,"sala":"SELECTOS AGUILARES","ruta":"SUP007","motivo":"Reingreso por Calidad","area":"Produccion","municipio":"AGUILARES","valor":6.5},{"mes":"2026-03","fecha":"2026-03-09","dow":0,"sala":"SUP SELECTOS SOYAPANGO EL ESPIRITU","ruta":"SUP006","motivo":"Reingreso por Despacho","area":"Despacho","municipio":"SOYAPANGO","valor":14.1},{"mes":"2026-03","fecha":"2026-03-09","dow":0,"sala":"SUP. SELECTOS SANTA ANA LAS RAMBLAS","ruta":"SUP001","motivo":"Reingreso por Despacho","area":"Despacho","municipio":"SANTA ANA","valor":3.05},{"mes":"2026-03","fecha":"2026-03-09","dow":0,"sala":"SELECTOS SOYAPANGO","ruta":"SUP006","motivo":"Reingreso por Despacho","area":"Despacho","municipio":"SOYAPANGO","valor":46.1},{"mes":"2026-03","fecha":"2026-03-09","dow":0,"sala":"SELECTOS ILOBASCO","ruta":"SUP007","motivo":"Reingreso por Despacho","area":"Despacho","municipio":"ILOBASCO","valor":2.17},{"mes":"2026-03","fecha":"2026-03-10","dow":1,"sala":"SUP. SELECT. SAN FRANCISCO GOTERA","ruta":"SSM001","motivo":"Diferencia de Precios","area":"Sistemas","municipio":"SAN FRANCISCO GOTERA","valor":3479.79},{"mes":"2026-03","fecha":"2026-03-12","dow":3,"sala":"SELECTOS METROSUR","ruta":"SUP004","motivo":"Reingreso por Despacho","area":"Despacho","municipio":"METROSUR","valor":6.51},{"mes":"2026-03","fecha":"2026-03-12","dow":3,"sala":"SELECTOS SAN MIGUEL GALERIAS","ruta":"SSM002","motivo":"Reingreso por Ventas","area":"Despacho","municipio":"SAN MIGUEL","valor":29.38},{"mes":"2026-03","fecha":"2026-03-12","dow":3,"sala":"SELECTOS APOPA II","ruta":"SUP007","motivo":"Reingreso por Despacho","area":"Despacho","municipio":"APOPA","valor":5.49},{"mes":"2026-03","fecha":"2026-03-12","dow":3,"sala":"SUP SEL SAN FRANCISCO GOTERA  ENCUE","ruta":"SSM001","motivo":"Reingreso por Calidad","area":"Produccion","municipio":"SAN FRANCISCO GOTERA","valor":1.53},{"mes":"2026-03","fecha":"2026-03-12","dow":3,"sala":"SELECTOS LAS PALMAS","ruta":"SUP002","motivo":"Reingreso por Despacho","area":"Despacho","municipio":"LA PALMA","valor":20.91},{"mes":"2026-03","fecha":"2026-03-12","dow":3,"sala":"SELECTOS METAPAN","ruta":"SUP001","motivo":"Reingreso por Despacho","area":"Despacho","municipio":"METAPAN","valor":3.05},{"mes":"2026-03","fecha":"2026-03-12","dow":3,"sala":"SUPER SELECTOS LA LIBERTAD EL ENCUE","ruta":"SUP002","motivo":"Reingreso por Despacho","area":"Despacho","municipio":"LA LIBERTAD","valor":34.04},{"mes":"2026-03","fecha":"2026-03-12","dow":3,"sala":"SELECTOS SAN BARTOLO","ruta":"SUP006","motivo":"Reingreso por Transporte","area":"Reparto","municipio":"SAN BARTOLO","valor":46.65},{"mes":"2026-03","fecha":"2026-03-16","dow":0,"sala":"SELECTOS AUTOPISTA SUR","ruta":"SUP003","motivo":"Reingreso por Despacho","area":"Despacho","municipio":"SAN SALVADOR","valor":1.53},{"mes":"2026-03","fecha":"2026-03-16","dow":0,"sala":"SUP. SELEC. SAN MARTIN EL ENCUENTRO","ruta":"SUP006","motivo":"Reingreso por Calidad","area":"Produccion","municipio":"SAN MARTIN","valor":1.53},{"mes":"2026-03","fecha":"2026-03-16","dow":0,"sala":"SELECTOS SONSONATE II","ruta":"SUP001","motivo":"Reingreso por Calidad","area":"Produccion","municipio":"SONSONATE","valor":1.53},{"mes":"2026-03","fecha":"2026-03-16","dow":0,"sala":"S. SELECTOS SAN MIGUEL PANAMERICANA","ruta":"SSM002","motivo":"Reingreso por Transporte","area":"Reparto","municipio":"SAN MIGUEL","valor":1.53},{"mes":"2026-03","fecha":"2026-03-16","dow":0,"sala":"SELECTOS LAS CASCADAS","ruta":"SUP003","motivo":"Reingreso por Calidad","area":"Produccion","municipio":"LAS CASCADAS","valor":4.58},{"mes":"2026-03","fecha":"2026-03-16","dow":0,"sala":"SELECTOS ARCE","ruta":"SUP005","motivo":"Reingreso por Despacho","area":"Despacho","municipio":"CIUDAD ARCE","valor":10.44},{"mes":"2026-03","fecha":"2026-03-16","dow":0,"sala":"SUPER SELECTOS QUEZALTEPEQUE","ruta":"SUP007","motivo":"Reingreso por Transporte","area":"Reparto","municipio":"QUEZALTEPEQUE","valor":11.66},{"mes":"2026-03","fecha":"2026-03-16","dow":0,"sala":"SELECTOS CIUDAD DELGADO","ruta":"SUP006","motivo":"Reingreso por Despacho","area":"Despacho","municipio":"CIUDAD DELGADO","valor":1.53},{"mes":"2026-03","fecha":"2026-03-19","dow":3,"sala":"SELECTOS APOPA II","ruta":"SUP007","motivo":"Reingreso por Calidad","area":"Produccion","municipio":"APOPA","valor":2.52},{"mes":"2026-03","fecha":"2026-03-19","dow":3,"sala":"SUPER SELECTOS MARSELLA","ruta":"SUP002","motivo":"Reingreso por Despacho","area":"Despacho","municipio":"MARSELLA","valor":1.53},{"mes":"2026-03","fecha":"2026-03-19","dow":3,"sala":"S. SELECTOS SAN MIGUEL PANAMERICANA","ruta":"SSM002","motivo":"Reingreso por Transporte","area":"Reparto","municipio":"SAN MIGUEL","valor":6.5},{"mes":"2026-03","fecha":"2026-03-19","dow":3,"sala":"SELECTOS APOPA I","ruta":"SUP006","motivo":"Reingreso por Transporte","area":"Reparto","municipio":"APOPA","valor":1.53},{"mes":"2026-03","fecha":"2026-03-19","dow":3,"sala":"SUP. SELECTOS SANTA ANA LAS RAMBLAS","ruta":"SUP001","motivo":"Reingreso por Transporte","area":"Reparto","municipio":"SANTA ANA","valor":17.67},{"mes":"2026-03","fecha":"2026-03-19","dow":3,"sala":"SELECTOS ZARAGOZA","ruta":"SUP002","motivo":"Reingreso por Despacho","area":"Despacho","municipio":"ZARAGOZA","valor":1.53},{"mes":"2026-03","fecha":"2026-03-19","dow":3,"sala":"SELECTOS MASFERRER","ruta":"SUP003","motivo":"Reingreso por Despacho","area":"Despacho","municipio":"MASFERRER","valor":19.1},{"mes":"2026-03","fecha":"2026-03-19","dow":3,"sala":"SELECTOS PLAZA MUNDO","ruta":"SUP006","motivo":"Reingreso por Transporte","area":"Reparto","municipio":"SOYAPANGO","valor":11.66},{"mes":"2026-03","fecha":"2026-03-23","dow":0,"sala":"SELECTOS ILOBASCO","ruta":"SUP007","motivo":"Error en orden de Compra","area":"Digitador","municipio":"ILOBASCO","valor":2.52},{"mes":"2026-03","fecha":"2026-03-23","dow":0,"sala":"S. SELECTOS SANTA TECLA LAS RAMBLAS","ruta":"SUP002","motivo":"Reingreso por Ventas","area":"Despacho","municipio":"SANTA TECLA","valor":13.29},{"mes":"2026-03","fecha":"2026-03-23","dow":0,"sala":"SELECTOS AUTOPISTA SUR","ruta":"SUP003","motivo":"Reingreso por Transporte","area":"Reparto","municipio":"AUTOPISTA SUR","valor":6.51},{"mes":"2026-03","fecha":"2026-03-23","dow":0,"sala":"SUPER SELECTOS ZACATECOLUCA EL ENCU","ruta":"SUP007","motivo":"Reingreso por Despacho","area":"Despacho","municipio":"ZACATECOLUCA","valor":2.34},{"mes":"2026-03","fecha":"2026-03-23","dow":0,"sala":"SUPER SELECTOS ZACATECOLUCA EL ENCU","ruta":"SUP007","motivo":"Reingreso por Despacho","area":"Despacho","municipio":"ZACATECOLUCA","valor":119.5},{"mes":"2026-03","fecha":"2026-03-23","dow":0,"sala":"SELECTOS SAN MIGUEL BARRIOS","ruta":"SSM002","motivo":"Reingreso por Transporte","area":"Reparto","municipio":"SAN MIGUEL BARRIOS","valor":5.49},{"mes":"2026-03","fecha":"2026-03-23","dow":0,"sala":"SELECTOS SANTA ROSA","ruta":"SUP002","motivo":"Reingreso por Despacho","area":"Despacho","municipio":"SANTA ROSA","valor":19.32},{"mes":"2026-03","fecha":"2026-03-23","dow":0,"sala":"SELECTOS ARCE","ruta":"SUP005","motivo":"Reingreso por Transporte","area":"Reparto","municipio":"CIUDAD ARCE","valor":7.32},{"mes":"2026-03","fecha":"2026-03-23","dow":0,"sala":"SELECTOS ARCE","ruta":"SUP005","motivo":"Reingreso por Ventas","area":"Despacho","municipio":"CIUDAD ARCE","valor":5.49},{"mes":"2026-03","fecha":"2026-03-23","dow":0,"sala":"SELECTOS CENTRO ANTEL","ruta":"SUP005","motivo":"Reingreso por Despacho","area":"Despacho","municipio":"SAN SALVADOR","valor":2.0},{"mes":"2026-03","fecha":"2026-03-23","dow":0,"sala":"SUPER SELECTOS QUEZALTEPEQUE","ruta":"SUP007","motivo":"Reingreso por Despacho","area":"Despacho","municipio":"QUEZALTEPEQUE","valor":6.5},{"mes":"2026-03","fecha":"2026-03-23","dow":0,"sala":"SUPER SELECTOS ATIQUIZAYA","ruta":"SUP001","motivo":"Reingreso por Despacho","area":"Despacho","municipio":"ATIQUIZAYA","valor":11.66},{"mes":"2026-03","fecha":"2026-03-23","dow":0,"sala":"SELECTOS LOS SANTOS #21","ruta":"SUP004","motivo":"Reingreso por Despacho","area":"Despacho","municipio":"LOS SANTOS","valor":5.49},{"mes":"2026-03","fecha":"2026-03-23","dow":0,"sala":"SELECTOS SANTA ROSA DE LIMA II","ruta":"SSM001","motivo":"Reingreso por Transporte","area":"Reparto","municipio":"SANTA ROSA DE LIMA","valor":2.87},{"mes":"2026-03","fecha":"2026-03-23","dow":0,"sala":"SELECTOS SANTA ANA CENTRO","ruta":"SUP001","motivo":"Reingreso por Despacho","area":"Despacho","municipio":"SANTA ANA","valor":5.49},{"mes":"2026-03","fecha":"2026-03-23","dow":0,"sala":"SELECTOS LA CIMA","ruta":"SUP003","motivo":"Reingreso por Ventas","area":"Despacho","municipio":"LA CIMA","valor":15.5},{"mes":"2026-03","fecha":"2026-03-23","dow":0,"sala":"SELECTOS MEJICANOS","ruta":"SUP006","motivo":"Reingreso por Despacho","area":"Despacho","municipio":"MEJICANOS","valor":1.53},{"mes":"2026-03","fecha":"2026-03-23","dow":0,"sala":"SUPER SELECTOS SANTA ANA EL ENCUENT","ruta":"SUP001","motivo":"Reingreso por Ventas","area":"Despacho","municipio":"SANTA ANA","valor":27.46},{"mes":"2026-03","fecha":"2026-03-26","dow":3,"sala":"SELECTOS PLAZA MUNDO","ruta":"SUP006","motivo":"Devolución por Averias","area":"Despacho","municipio":"PLAZA MUNDO","valor":0.61},{"mes":"2026-03","fecha":"2026-03-26","dow":3,"sala":"SUPER SELECTOS CENTRO SAN JOSE","ruta":"SUP005","motivo":"Devolución por Averias","area":"Despacho","municipio":"CENTRO SAN JOSE","valor":3.05},{"mes":"2026-03","fecha":"2026-03-26","dow":3,"sala":"SUPER SELECTOS CHALCHUAPA","ruta":"SUP001","motivo":"Reingreso por Despacho","area":"Despacho","municipio":"CHALCHUAPA","valor":19.93},{"mes":"2026-03","fecha":"2026-03-26","dow":3,"sala":"SELECTOS SANTA TECLA","ruta":"SUP002","motivo":"Reingreso por Transporte","area":"Reparto","municipio":"SANTA TECLA","valor":11.66},{"mes":"2026-03","fecha":"2026-03-26","dow":3,"sala":"SELECTOS CIUDAD DELGADO","ruta":"SUP006","motivo":"Reingreso por Calidad","area":"Despacho","municipio":"CIUDAD DELGADO","valor":1.53},{"mes":"2026-03","fecha":"2026-03-30","dow":0,"sala":"SELECTOS METROSUR","ruta":"SUP004","motivo":"Error en orden de Compra","area":"Digitador","municipio":"METROSUR","valor":275.37},{"mes":"2026-03","fecha":"2026-03-30","dow":0,"sala":"SUPER SELECTOS CHALATENANGO","ruta":"SUP007","motivo":"Devolución por Averias","area":"Despacho","municipio":"CHALATENANGO","valor":3.05},{"mes":"2026-03","fecha":"2026-03-30","dow":0,"sala":"SUP SEL SAN FRANCISCO GOTERA  ENCUE","ruta":"SSM001","motivo":"Diferencia de Precios","area":"Sistemas","municipio":"SAN FRANCISCO GOTERA","valor":2732.97},{"mes":"2026-03","fecha":"2026-03-30","dow":0,"sala":"SUP SEL SAN FRANCISCO GOTERA  ENCUE","ruta":"SSM001","motivo":"Diferencia de Precios","area":"Sistemas","municipio":"SAN FRANCISCO GOTERA","valor":2728.89},{"mes":"2026-03","fecha":"2026-03-30","dow":0,"sala":"S SELECTOS VALLE DULCE EL ENCUENTRO","ruta":"SUP007","motivo":"No Entregado por Despacho","area":"Despacho","municipio":"VALLE DULCE","valor":10.98},{"mes":"2026-03","fecha":"2026-03-30","dow":0,"sala":"SUPER SELECTOS COJUTEPEQUE II","ruta":"SUP007","motivo":"No Solicitado por Cliente","area":"Digitador","municipio":"COJUTEPEQUE","valor":6.51},{"mes":"2026-03","fecha":"2026-03-30","dow":0,"sala":"SELECTOS SONSONATE II","ruta":"SUP001","motivo":"Reingreso por Calidad","area":"Despacho","municipio":"SONSONATE","valor":1.53},{"mes":"2026-03","fecha":"2026-03-30","dow":0,"sala":"SELECTOS LA SULTANA","ruta":"SUP003","motivo":"Reingreso por Despacho","area":"Despacho","municipio":"SULTANA","valor":19.93},{"mes":"2026-03","fecha":"2026-03-30","dow":0,"sala":"SELECTOS MIRALVALLE II","ruta":"SUP004","motivo":"Reingreso por Transporte","area":"Reparto","municipio":"MIRALVALLE","valor":50.91},{"mes":"2026-03","fecha":"2026-03-30","dow":0,"sala":"SUPER SELECTOS SAN GABRIEL","ruta":"SUP004","motivo":"Reingreso por Despacho","area":"Despacho","municipio":"SAN GABRIEL","valor":19.93},{"mes":"2026-03","fecha":"2026-03-30","dow":0,"sala":"SELECTOS SANTA ROSA","ruta":"SUP002","motivo":"Reingreso por Despacho","area":"Despacho","municipio":"SANTA ROSA","valor":3.05},{"mes":"2026-03","fecha":"2026-03-30","dow":0,"sala":"SELECTOS TRIGUEROS","ruta":"SUP004","motivo":"Reingreso por Despacho","area":"Despacho","municipio":"TRIGUEROS","valor":19.93},{"mes":"2026-03","fecha":"2026-03-30","dow":0,"sala":"SELECTOS CIUDAD DELGADO","ruta":"SUP006","motivo":"Reingreso por Despacho","area":"Despacho","municipio":"CIUDAD DELGADO","valor":7.32},{"mes":"2026-03","fecha":"2026-03-30","dow":0,"sala":"SELECTOS MEGA SELECTOS","ruta":"SUP006","motivo":"Reingreso por Calidad","area":"Despacho","municipio":"MEGA SELECTOS","valor":5.74},{"mes":"2026-03","fecha":"2026-03-30","dow":0,"sala":"SUPER SELECTOS PLAZA MUNDO APOPA","ruta":"SUP006","motivo":"Reingreso por Transporte","area":"Reparto","municipio":"APOPA","valor":11.66},{"mes":"2026-03","fecha":"2026-03-30","dow":0,"sala":"SUPER SELECTOS LIBERTAD","ruta":"SUP002","motivo":"Reingreso por Despacho","area":"Despacho","municipio":"LA LIBERTAD","valor":4.58},{"mes":"2026-03","fecha":"2026-03-30","dow":0,"sala":"SELECTOS COJUTEPEQUE CENTRO","ruta":"SUP007","motivo":"Reingreso por Despacho","area":"Despacho","municipio":"COJUTEPEQUE","valor":9.55},{"mes":"2026-03","fecha":"2026-03-30","dow":0,"sala":"SELECTOS SAN MIGUEL CENTRO","ruta":"SSM002","motivo":"Reingreso por Transporte","area":"Reparto","municipio":"SAN MIGUEL","valor":16.14},{"mes":"2026-03","fecha":"2026-03-30","dow":0,"sala":"SUPER SELECTOS COJUTEPEQUE II","ruta":"SUP007","motivo":"Reingreso por Despacho","area":"Despacho","municipio":"COJUTEPEQUE","valor":6.51},{"mes":"2026-03","fecha":"2026-03-30","dow":0,"sala":"SELECTOS SANTA EMILIA","ruta":"SUP003","motivo":"Reingreso por Despacho","area":"Despacho","municipio":"SANTA EMILIA","valor":10.44}];
+
+const ACOLOR={Despacho:'#1a3550',Reparto:'#2980b9',Sistemas:'#c0392b',Produccion:'#27ae60',Digitador:'#8e44ad',Calleja:'#e67e22','Sin clasificar':'#95a5a6'};
+const DIAS=['Lun','Mar','Mié','Jue','Vie','Sáb'];
+const tc=m=>m.includes('Despacho')?'#1a3550':m.includes('Transporte')?'#2980b9':m.includes('Calidad')?'#27ae60':m.includes('Ventas')?'#8e44ad':m.includes('Precios')?'#c0392b':m.includes('Error')?'#e67e22':'#7f8c8d';
+
+let fM='all',fR='all',fA='all';
+let cPie,cArea,cMot,cRuta,cCmpV,cCmpC,cCmpM,cCmpA;
+
+const fi=()=>DATA.filter(d=>(fM==='all'||d.mes===fM)&&(fR==='all'||d.ruta===fR)&&(fA==='all'||d.area===fA));
+const fiMes=m=>DATA.filter(d=>d.mes===m&&(fR==='all'||d.ruta===fR)&&(fA==='all'||d.area===fA));
+const fmt=n=>'$'+Number(n).toLocaleString('es-SV',{minimumFractionDigits:2,maximumFractionDigits:2});
+const fmtK=n=>n>=1000000?'$'+(n/1000000).toFixed(2)+'M':n>=1000?'$'+(n/1000).toFixed(1)+'K':'$'+n.toFixed(2);
+
+function setM(v,b){fM=v;document.querySelectorAll('.filters .pill').forEach(x=>{if(x.onclick?.toString().includes('setM('))x.classList.remove('on','gr');});b.classList.add(v==='all'?'gr':'on');if(v==='all')b.classList.add('gr');ra();}
+function setR(v,b){fR=v;document.querySelectorAll('.filters .pill').forEach(x=>{if(x.onclick?.toString().includes('setR('))x.classList.remove('on');});b.classList.add('on');ra();}
+function setA(v,b){fA=v;document.querySelectorAll('.filters .pill').forEach(x=>{if(x.onclick?.toString().includes('setA('))x.classList.remove('on');});b.classList.add('on');ra();}
+
+function animCount(el,target,isFloat=false){
+  if(!el)return;
+  let cur=0,frames=50;
+  const step=target/frames;
+  const t=setInterval(()=>{
+    cur=Math.min(cur+step,target);
+    el.textContent=isFloat?'$'+cur.toLocaleString('es-SV',{minimumFractionDigits:2,maximumFractionDigits:2}):Math.round(cur).toString();
+    if(cur>=target)clearInterval(t);
+  },16);
+}
+
+function rKPIs(){
+  const d=fi(),tot=d.reduce((s,r)=>s+r.valor,0),salas=new Set(d.map(r=>r.sala)).size;
+  const feb=fiMes('2026-02'),mar=fiMes('2026-03');
+  const totF=feb.reduce((s,r)=>s+r.valor,0),totM=mar.reduce((s,r)=>s+r.valor,0);
+  const pctDelta=totF>0?((totM-totF)/totF*100):0;
+  const ncDelta=mar.length-feb.length;
+  const byM={};d.forEach(r=>{byM[r.motivo]=(byM[r.motivo]||0)+r.valor;});
+  const topM=Object.entries(byM).sort((a,b)=>b[1]-a[1])[0];
+  const byA={};d.forEach(r=>{byA[r.area]=(byA[r.area]||{v:0,c:0});byA[r.area].v+=r.valor;byA[r.area].c++;});
+  const topA=Object.entries(byA).sort((a,b)=>b[1].v-a[1].v)[0];
+
+  document.getElementById('kpis').innerHTML=`
+    <div class="kcard k1"><div class="klbl">Total NC reingresado</div><div class="kval c1" id="kv1">$0.00</div><div class="ksub">${d.length} notas · ${salas} salas</div>${fM==='all'?`<div class="kdelta ${pctDelta>0?'up':'dn'}">${pctDelta>0?'▲':'▼'} ${Math.abs(pctDelta).toFixed(1)}% Mar vs Feb</div>`:''}</div>
+    <div class="kcard k2"><div class="klbl">Recuento total NC</div><div class="kval c2" id="kv2">0</div><div class="ksub">${salas} salas afectadas</div>${fM==='all'?`<div class="kdelta ${ncDelta>0?'up':'dn'}">${ncDelta>0?'+'+ncDelta:ncDelta} NC Mar vs Feb</div>`:''}</div>
+    <div class="kcard k3"><div class="klbl">Área responsable</div><div class="kval c3" style="font-size:14px;padding-top:4px;">${topA?topA[0]:'-'}</div><div class="ksub">${topA?`${topA[1].c} NC · ${fmtK(topA[1].v)}`:''}</div></div>
+    <div class="kcard k4"><div class="klbl">Motivo principal</div><div class="kval c4" style="font-size:13px;padding-top:4px;">${topM?topM[0].replace('Reingreso por ','').slice(0,18):'-'}</div><div class="ksub">${topM?fmtK(topM[1]):''}</div></div>
+    <div class="kcard k5"><div class="klbl">Promedio por NC</div><div class="kval c5" id="kv5">$0.00</div><div class="ksub">valor promedio</div></div>
+  `;
+  setTimeout(()=>{animCount(document.getElementById('kv1'),tot,true);animCount(document.getElementById('kv2'),d.length,false);animCount(document.getElementById('kv5'),d.length?tot/d.length:0,true);},50);
+
+  const difVal=d.filter(r=>r.motivo==='Diferencia de Precios').reduce((s,r)=>s+r.valor,0);
+  const pct=tot>0?((difVal/tot)*100).toFixed(1):0;
+  document.getElementById('alrt').innerHTML=difVal>500?`<div class="alert"><span style="font-size:18px;">⚠</span><span><strong>Alerta Sistemas:</strong> "Diferencia de Precios" representa el <strong>${pct}%</strong> del valor total (${fmt(difVal)}). Concentrado en SSM001 — Sup. Select. San Francisco Gotera. Se recomienda revisión urgente con el área de Sistemas.</span></div>`:'';
+}
+
+function rDays(){
+  const d=fi(),byD=new Array(6).fill(0),byC=new Array(6).fill(0);
+  d.forEach(r=>{if(r.dow>=0&&r.dow<6){byD[r.dow]+=r.valor;byC[r.dow]++;}});
+  const maxV=Math.max(...byD,1),h=88;
+  document.getElementById('days').innerHTML=DIAS.map((dia,i)=>`
+    <div class="day-col">
+      <div class="day-val">${byC[i]>0?byC[i]+' NC':'—'}</div>
+      <div class="day-bar" style="height:${Math.max(3,Math.round(byD[i]/maxV*h))}px;background:${byD[i]===Math.max(...byD)?'#c0392b':'#2980b9'};"></div>
+      <div class="day-lbl">${dia}</div>
+    </div>`).join('');
+}
+
+function rPie(){
+  const d=fi(),byA={};d.forEach(r=>{byA[r.area]=(byA[r.area]||0)+r.valor;});
+  const s=Object.entries(byA).sort((a,b)=>b[1]-a[1]);
+  if(cPie)cPie.destroy();
+  cPie=new Chart(document.getElementById('cPie'),{type:'doughnut',data:{labels:s.map(([a])=>a),datasets:[{data:s.map(([,v])=>v),backgroundColor:s.map(([a])=>ACOLOR[a]||'#95a5a6'),borderWidth:3,borderColor:'#fff'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right',labels:{font:{size:11},boxWidth:11,padding:8,color:'#2a3a4a'}},tooltip:{callbacks:{label:c=>`${c.label}: ${fmt(c.raw)}`}}},animation:{animateScale:true,duration:700}}});
+}
+
+function rCnts(){
+  const d=fi(),areas=Object.keys(ACOLOR).filter(a=>a!=='Sin clasificar');
+  const byA={};areas.forEach(a=>byA[a]=0);d.forEach(r=>{if(byA[r.area]!==undefined)byA[r.area]++;});
+  const act=areas.filter(a=>byA[a]>0),max=Math.max(...act.map(a=>byA[a]),1),h=68;
+  document.getElementById('cnts').innerHTML=act.map(a=>`
+    <div class="cnt-col">
+      <div class="cnt-num">${byA[a]}</div>
+      <div class="cnt-bar" style="height:${Math.max(3,Math.round(byA[a]/max*h))}px;background:${ACOLOR[a]};width:100%;"></div>
+      <div class="cnt-lbl">${a.slice(0,8)}</div>
+    </div>`).join('');
+}
+
+const chartOpts=(idx=true)=>({indexAxis:idx?'y':'x',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>fmt(c.raw)}}},scales:{x:{ticks:{callback:v=>fmtK(v),font:{size:11},color:'#2a3a4a'},grid:{color:'rgba(0,0,0,0.05)'}},y:{ticks:{font:{size:11},color:'#2a3a4a'},grid:{display:false}}},animation:{duration:700}});
+
+function rArea(){
+  const d=fi(),areas=Object.keys(ACOLOR).filter(a=>a!=='Sin clasificar');
+  const byA={};areas.forEach(a=>byA[a]=0);d.forEach(r=>{if(byA[r.area]!==undefined)byA[r.area]+=r.valor;});
+  if(cArea)cArea.destroy();
+  const opts=chartOpts(false);
+  opts.scales.x.ticks.callback=v=>fmtK(v);opts.scales.y.ticks.color='#1a3550';
+  cArea=new Chart(document.getElementById('cArea'),{type:'bar',data:{labels:areas,datasets:[{data:areas.map(a=>byA[a]),backgroundColor:areas.map(a=>ACOLOR[a]),borderRadius:5,borderSkipped:false}]},options:opts});
+}
+
+function rMot(){
+  const d=fi(),byM={};d.forEach(r=>{byM[r.motivo]=(byM[r.motivo]||0)+r.valor;});
+  const s=Object.entries(byM).sort((a,b)=>b[1]-a[1]).slice(0,9);
+  if(cMot)cMot.destroy();
+  cMot=new Chart(document.getElementById('cMot'),{type:'bar',data:{labels:s.map(([m])=>m.length>26?m.slice(0,26)+'…':m),datasets:[{data:s.map(([,v])=>v),backgroundColor:s.map(([m])=>tc(m)),borderRadius:4,borderSkipped:false}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>fmt(c.raw),title:t=>s[t[0].dataIndex][0]}}},scales:{x:{ticks:{callback:v=>fmtK(v),font:{size:11},color:'#2a3a4a'},grid:{color:'rgba(0,0,0,0.05)'}},y:{ticks:{font:{size:11},color:'#1a3550'},grid:{display:false}}},animation:{duration:700}}});
+}
+
+function rRuta(){
+  const d=fi(),byR={};d.forEach(r=>{byR[r.ruta]=(byR[r.ruta]||{v:0,c:0});byR[r.ruta].v+=r.valor;byR[r.ruta].c++;});
+  const s=Object.entries(byR).sort((a,b)=>b[1].v-a[1].v);
+  if(cRuta)cRuta.destroy();
+  cRuta=new Chart(document.getElementById('cRuta'),{type:'bar',data:{labels:s.map(([r])=>r),datasets:[{label:'Valor NC ($)',data:s.map(([,v])=>v.v),backgroundColor:'#1a3550',borderRadius:4,borderSkipped:false,yAxisID:'y'},{label:'Cantidad NC',data:s.map(([,v])=>v.c),backgroundColor:'rgba(192,57,43,0.65)',borderRadius:4,borderSkipped:false,yAxisID:'y1'}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{font:{size:11},boxWidth:11,color:'#1a3550'}}},scales:{y:{ticks:{font:{size:12},color:'#1a3550'},grid:{display:false}},y1:{display:false},x:{ticks:{callback:v=>fmtK(v),font:{size:11},color:'#2a3a4a'},grid:{color:'rgba(0,0,0,0.05)'}},x1:{display:false}},animation:{duration:700}}});
+}
+
+function rCmp(){
+  const feb=fiMes('2026-02'),mar=fiMes('2026-03');
+  const C=['#2980b9','#c0392b'],meses=['Febrero (62 NC)','Marzo (90 NC)'];
+
+  if(cCmpV)cCmpV.destroy();
+  cCmpV=new Chart(document.getElementById('cCmpV'),{type:'bar',data:{labels:meses,datasets:[{data:[feb.reduce((s,r)=>s+r.valor,0),mar.reduce((s,r)=>s+r.valor,0)],backgroundColor:C,borderRadius:7,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>fmt(c.raw)}}},scales:{x:{ticks:{font:{size:12},color:'#1a3550'},grid:{display:false}},y:{ticks:{callback:v=>fmtK(v),font:{size:11},color:'#2a3a4a'},grid:{color:'rgba(0,0,0,0.05)'}}},animation:{duration:800}}});
+
+  if(cCmpC)cCmpC.destroy();
+  cCmpC=new Chart(document.getElementById('cCmpC'),{type:'bar',data:{labels:meses,datasets:[{data:[feb.length,mar.length],backgroundColor:C,borderRadius:7,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>`${c.raw} NC`}}},scales:{x:{ticks:{font:{size:12},color:'#1a3550'},grid:{display:false}},y:{ticks:{font:{size:11},color:'#2a3a4a'},grid:{color:'rgba(0,0,0,0.05)'}}},animation:{duration:800}}});
+
+  const mots=[...new Set([...feb,...mar].map(r=>r.motivo))].sort();
+  if(cCmpM)cCmpM.destroy();
+  cCmpM=new Chart(document.getElementById('cCmpM'),{type:'bar',data:{labels:mots.map(m=>m.length>24?m.slice(0,24)+'…':m),datasets:[{label:'Febrero',data:mots.map(m=>feb.filter(r=>r.motivo===m).reduce((s,r)=>s+r.valor,0)),backgroundColor:'#2980b9',borderRadius:3,borderSkipped:false},{label:'Marzo',data:mots.map(m=>mar.filter(r=>r.motivo===m).reduce((s,r)=>s+r.valor,0)),backgroundColor:'#c0392b',borderRadius:3,borderSkipped:false}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{font:{size:11},boxWidth:11,color:'#1a3550'}},tooltip:{callbacks:{title:t=>mots[t[0].dataIndex],label:c=>`${c.dataset.label}: ${fmt(c.raw)}`}}},scales:{x:{ticks:{callback:v=>fmtK(v),font:{size:11},color:'#2a3a4a'},grid:{color:'rgba(0,0,0,0.05)'}},y:{ticks:{font:{size:11},color:'#1a3550'},grid:{display:false}}},animation:{duration:800}}});
+
+  const areas=Object.keys(ACOLOR).filter(a=>a!=='Sin clasificar');
+  if(cCmpA)cCmpA.destroy();
+  cCmpA=new Chart(document.getElementById('cCmpA'),{type:'bar',data:{labels:areas,datasets:[{label:'Febrero',data:areas.map(a=>feb.filter(r=>r.area===a).length),backgroundColor:'#2980b9',borderRadius:3,borderSkipped:false},{label:'Marzo',data:areas.map(a=>mar.filter(r=>r.area===a).length),backgroundColor:'#c0392b',borderRadius:3,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{font:{size:11},boxWidth:11,color:'#1a3550'}}},scales:{x:{ticks:{font:{size:11},color:'#1a3550'},grid:{display:false}},y:{ticks:{font:{size:11},color:'#2a3a4a'},grid:{color:'rgba(0,0,0,0.05)'}}},animation:{duration:800}}});
+}
+
+function rSala(){
+  const d=fi(),byS={};
+  d.forEach(r=>{if(!byS[r.sala])byS[r.sala]={v:0,c:0,ruta:r.ruta,area:r.area};byS[r.sala].v+=r.valor;byS[r.sala].c++;});
+  const s=Object.entries(byS).sort((a,b)=>b[1].v-a[1].v);
+  const tot=s.reduce((sum,[,v])=>sum+v.v,0);
+  document.getElementById('sala-tb').innerHTML=s.map(([sala,{v,c,ruta,area}])=>{
+    const pct=tot>0?((v/tot)*100).toFixed(1):0;
+    const col=parseFloat(pct)>15?'#c0392b':parseFloat(pct)>5?'#e67e22':'#27ae60';
+    return`<tr>
+      <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${sala}">${sala}</td>
+      <td><span class="tag" style="background:#e8eef4;color:#1a3550;font-size:11px;">${ruta}</span></td>
+      <td><span class="tag" style="background:${ACOLOR[area]||'#888'}22;color:${ACOLOR[area]||'#555'};font-size:11px;">${area}</span></td>
+      <td class="r" style="color:#c0392b;font-size:12px;">${fmt(v)}</td>
+      <td class="r" style="color:${col};font-size:12px;font-weight:700;">${pct}%</td>
+      <td class="r" style="font-size:12px;">${c}</td>
+      <td><div style="width:${Math.min(parseFloat(pct)*5,100)}px;height:7px;background:${col};border-radius:4px;min-width:2px;"></div></td>
+    </tr>`;
+  }).join('');
+}
+
+function rDet(){
+  const q=(document.getElementById('srch')?.value||'').toLowerCase();
+  const ord=document.getElementById('sort-sel')?.value||'fecha-desc';
+  let d=fi().filter(r=>!q||r.sala.toLowerCase().includes(q)||r.motivo.toLowerCase().includes(q)||r.area.toLowerCase().includes(q)||r.municipio.toLowerCase().includes(q)||r.ruta.toLowerCase().includes(q));
+  if(ord==='fecha-desc')d.sort((a,b)=>b.fecha.localeCompare(a.fecha));
+  else if(ord==='valor-desc')d.sort((a,b)=>b.valor-a.valor);
+  else d.sort((a,b)=>a.valor-b.valor);
+  document.getElementById('dcnt').textContent=d.length+' registros';
+  document.getElementById('det-tb').innerHTML=d.map(r=>`
+    <tr>
+      <td style="white-space:nowrap;font-size:12px;">${r.fecha}</td>
+      <td style="max-width:190px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px;" title="${r.sala}">${r.sala}</td>
+      <td><span class="tag" style="background:#e8eef4;color:#1a3550;font-size:11px;">${r.ruta}</span></td>
+      <td><span class="tag" style="background:${tc(r.motivo)}22;color:${tc(r.motivo)};font-size:11px;">${r.motivo.length>26?r.motivo.slice(0,26)+'…':r.motivo}</span></td>
+      <td style="color:${ACOLOR[r.area]||'#555'};font-weight:700;font-size:11px;">${r.area}</td>
+      <td style="color:#5a6a7a;font-size:11px;">${r.municipio}</td>
+      <td class="r" style="color:${r.valor>500?'#c0392b':r.valor>50?'#e67e22':'#1a3550'};font-size:12px;">${fmt(r.valor)}</td>
+    </tr>`).join('');
+}
+
+function showTab(t,btn){
+  document.querySelectorAll('.vp').forEach(p=>p.classList.remove('show'));
+  document.querySelectorAll('.ntab').forEach(b=>b.classList.remove('on'));
+  document.getElementById('tab-'+t).classList.add('show');btn.classList.add('on');
+  if(t==='cmp')rCmp();if(t==='sala')rSala();if(t==='det')rDet();
+}
+
+function ra(){rKPIs();rDays();rPie();rCnts();rArea();rMot();rRuta();rSala();rDet();if(document.getElementById('tab-cmp').classList.contains('show'))rCmp();}
+
+// Cargar logos reales desde los archivos subidos
+async function loadLogos(){
+  const files=[
+    {path:'/mnt/user-data/uploads/LOGO_LACTOLAC_1.jpeg',id:'logo-lactolac'},
+    {path:'/mnt/user-data/uploads/LOGO_YES_1.jpeg',id:'logo-yes'}
+  ];
+  for(const f of files){
+    try{
+      const r=await fetch(f.path);
+      if(r.ok){
+        const blob=await r.blob();
+        const url=URL.createObjectURL(blob);
+        document.getElementById(f.id).src=url;
+      }
+    }catch(e){
+      // intentar storage
+      try{
+        const key=f.id==='logo-lactolac'?'logo_lactolac':'logo_yes';
+        const stored=await window.storage.get(key);
+        if(stored?.value)document.getElementById(f.id).src=stored.value;
+      }catch(e2){}
+    }
+  }
+}
+
+loadLogos();
+ra();
+</script>
