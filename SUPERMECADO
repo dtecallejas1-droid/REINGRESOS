@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Control de Reingresos — Calleja S.A.</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body,div,span,p,td,th,button,input,select{font-family:'Segoe UI',system-ui,-apple-system,Arial,sans-serif;}
+.db{background:#eef1f5;}
+
+.hdr{background:linear-gradient(135deg,#1a3550 0%,#0d2035 100%);padding:12px 20px;display:flex;justify-content:space-between;align-items:center;}
+.hdr-left .t{color:#fff;font-size:16px;font-weight:700;letter-spacing:.01em;}
+.hdr-left .s{color:#7aafd4;font-size:12px;margin-top:3px;}
+.hdr-logos{display:flex;align-items:center;gap:12px;}
+.logo-img{height:40px;width:auto;border-radius:6px;background:#fff;padding:3px 6px;object-fit:contain;}
+.live-pill{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:#a0d4f0;font-size:11px;padding:5px 13px;border-radius:20px;margin-left:6px;}
+.live-dot{width:8px;height:8px;border-radius:50%;background:#2ecc71;animation:blink 1.4s infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.2;}}
+
+.filters{background:#fff;padding:9px 20px;border-bottom:1px solid #dde3ea;display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+.flbl{font-size:11px;font-weight:700;color:#4a5568;text-transform:uppercase;letter-spacing:.06em;}
+.pill{font-size:12px;padding:5px 14px;border-radius:20px;border:1px solid #d0d7df;background:#fff;color:#4a5568;cursor:pointer;font-weight:500;transition:all .15s;}
+.pill:hover:not(.on):not(.gr){background:#f0f4f8;border-color:#b0bcc8;}
+.pill.on{background:#1a3550;color:#fff;border-color:#1a3550;}
+.pill.gr{background:#2e7d32;color:#fff;border-color:#2e7d32;}
+.sep{width:1px;height:22px;background:#e2e6ea;flex-shrink:0;}
+
+.nav{display:flex;gap:0;background:#fff;border-bottom:2px solid #dde3ea;}
+.ntab{font-size:13px;padding:11px 20px;border:none;background:transparent;color:#6c7a8a;cursor:pointer;font-weight:500;border-bottom:2.5px solid transparent;margin-bottom:-2px;transition:all .15s;}
+.ntab:hover{color:#1a3550;background:#f8fafc;}
+.ntab.on{color:#1a3550;border-bottom-color:#1a3550;font-weight:700;background:#f8fafc;}
+.vp{display:none;}.vp.show{display:block;}
+
+.body{padding:14px 18px;}
+
+/* KPIs */
+.kgrid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin-bottom:14px;}
+.kcard{background:#fff;border-radius:10px;padding:14px 16px;border-left:4px solid #d0d7df;transition:transform .18s,box-shadow .18s;cursor:default;}
+.kcard:hover{transform:translateY(-2px);box-shadow:0 4px 16px rgba(0,0,0,.08);}
+.kcard.k1{border-left-color:#1a3550;}.kcard.k2{border-left-color:#c0392b;}.kcard.k3{border-left-color:#e67e22;}.kcard.k4{border-left-color:#27ae60;}.kcard.k5{border-left-color:#8e44ad;}
+.klbl{font-size:11px;font-weight:700;color:#6a7a8a;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;}
+.kval{font-size:24px;font-weight:700;line-height:1.1;}
+.kval.c1{color:#1a3550;}.kval.c2{color:#c0392b;}.kval.c3{color:#e67e22;}.kval.c4{color:#27ae60;}.kval.c5{color:#8e44ad;}
+.ksub{font-size:11px;color:#7a8a9a;margin-top:5px;line-height:1.4;}
+.kdelta{font-size:11px;font-weight:700;margin-top:4px;}
+.kdelta.up{color:#c0392b;}.kdelta.dn{color:#27ae60;}
+
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px;}
+.panel{background:#fff;border-radius:10px;padding:16px;}
+.pt{font-size:11px;font-weight:700;color:#4a5568;text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px;display:flex;align-items:center;gap:7px;}
+.pt-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+
+.alert{background:#fff8e6;border:1.5px solid #f39c12;border-radius:9px;padding:11px 15px;margin-bottom:14px;font-size:12px;color:#6d4c00;display:flex;gap:10px;align-items:flex-start;line-height:1.5;}
+.alert strong{color:#5a3d00;}
+
+/* Graficos Manuales */
+.day-wrap{display:flex;align-items:flex-end;gap:5px;height:100px;}
+.day-col{display:flex;flex-direction:column;align-items:center;flex:1;}
+.day-bar{width:100%;border-radius:5px 5px 0 0;transition:height .5s ease;}
+.day-lbl{font-size:11px;color:#5a6a7a;margin-top:5px;font-weight:500;}
+.day-val{font-size:11px;font-weight:700;color:#1a3550;margin-bottom:3px;}
+
+.cnt-wrap{display:flex;align-items:flex-end;gap:8px;height:85px;}
+.cnt-col{display:flex;flex-direction:column;align-items:center;flex:1;gap:4px;}
+.cnt-num{font-size:13px;font-weight:700;color:#1a3550;}
+.cnt-bar{width:100%;border-radius:5px 5px 0 0;}
+.cnt-lbl{font-size:10px;color:#5a6a7a;text-align:center;font-weight:600;}
+
+/* Tablas */
+.tbl{width:100%;border-collapse:collapse;}
+.tbl th{padding:9px 10px;border-bottom:2px solid #e2e6ea;font-size:11px;font-weight:700;color:#4a5568;text-transform:uppercase;letter-spacing:.04em;background:#f8fafc;text-align:left;}
+.tbl th.r{text-align:right;}
+.tbl td{padding:8px 10px;border-bottom:1px solid #f0f2f5;color:#1a3550;font-size:12px;}
+.tbl td.r{text-align:right;font-weight:700;}
+.tbl tr:hover td{background:#f5f8fc;}
+.tw{max-height:340px;overflow-y:auto;border-radius:7px;border:1px solid #e8edf2;}
+.tag{display:inline-block;font-size:11px;padding:3px 9px;border-radius:12px;font-weight:600;}
+</style>
+</head>
+<body>
+
+<div class="db">
+  <div class="hdr">
+    <div class="hdr-left">
+      <div class="t">Sistema de Control de Reingresos — Calleja S.A. DE C.V. 2026</div>
+      <div class="s">Notas de Crédito · Febrero & Marzo 2026 · 152 registros</div>
+    </div>
+    <div class="hdr-logos">
+      <div class="live-pill"><span class="live-dot"></span>En vivo</div>
+    </div>
+  </div>
+
+  <div class="filters">
+    <span class="flbl">Mes</span>
+    <button class="pill gr on" onclick="setM('all',this)">Todos</button>
+    <button class="pill" onclick="setM('2026-02',this)">Febrero</button>
+    <button class="pill" onclick="setM('2026-03',this)">Marzo</button>
+    <div class="sep"></div>
+    <span class="flbl">Ruta</span>
+    <button class="pill on" id="rall" onclick="setR('all',this)">Todas</button>
+    <button class="pill" onclick="setR('SSM001',this)">SSM001</button>
+    <button class="pill" onclick="setR('SUP001',this)">SUP001</button>
+    <div class="sep"></div>
+    <span class="flbl">Área</span>
+    <button class="pill on" onclick="setA('all',this)">Todas</button>
+    <button class="pill" onclick="setA('Despacho',this)">Despacho</button>
+    <button class="pill" onclick="setA('Reparto',this)">Reparto</button>
+    <button class="pill" onclick="setA('Sistemas',this)">Sistemas</button>
+  </div>
+
+  <div class="nav">
+    <button class="ntab on" onclick="showTab('res',this)">Resumen</button>
+    <button class="ntab" onclick="showTab('cmp',this)">Comparativa</button>
+    <button class="ntab" onclick="showTab('sala',this)">Por sala</button>
+    <button class="ntab" onclick="showTab('det',this)">Detalle NC</button>
+  </div>
+
+  <div class="body">
+    <div class="vp show" id="tab-res">
+      <div id="alrt"></div>
+      <div class="kgrid" id="kpis"></div>
+      <div class="row3">
+        <div class="panel">
+          <div class="pt"><span class="pt-dot" style="background:#c0392b;"></span>NC por día de semana</div>
+          <div class="day-wrap" id="days"></div>
+        </div>
+        <div class="panel">
+          <div class="pt"><span class="pt-dot" style="background:#1a3550;"></span>Distribución por área ($)</div>
+          <div style="position:relative;height:135px;"><canvas id="cPie"></canvas></div>
+        </div>
+        <div class="panel">
+          <div class="pt"><span class="pt-dot" style="background:#e67e22;"></span>Recuento NC por área</div>
+          <div class="cnt-wrap" id="cnts"></div>
+        </div>
+      </div>
+      <div class="row2">
+        <div class="panel">
+          <div class="pt"><span class="pt-dot" style="background:#1a3550;"></span>Valor NC por área responsable</div>
+          <div style="position:relative;height:200px;"><canvas id="cArea"></canvas></div>
+        </div>
+        <div class="panel">
+          <div class="pt"><span class="pt-dot" style="background:#e67e22;"></span>Valor NC por motivo</div>
+          <div style="position:relative;height:200px;"><canvas id="cMot"></canvas></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="vp" id="tab-sala">
+      <div class="panel">
+        <div class="pt">Resumen por sala</div>
+        <div class="tw">
+          <table class="tbl"><thead><tr>
+            <th>Sala</th><th>Ruta</th><th class="r">Valor NC</th><th class="r">% total</th>
+          </tr></thead><tbody id="sala-tb"></tbody></table>
+        </div>
+      </div>
+    </div>
+
+    <div class="vp" id="tab-det">
+      <div class="tw">
+        <table class="tbl"><thead><tr>
+          <th>Fecha</th><th>Sala</th><th>Motivo</th><th>Área</th><th class="r">Valor</th>
+        </tr></thead><tbody id="det-tb"></tbody></table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+// DATA ACORTADA PARA EJEMPLO - Reemplazar con el JSON completo si es necesario
+const DATA=[{"mes":"2026-02","fecha":"2026-02-05","dow":3,"sala":"SELECTOS SANTA ROSA","ruta":"SSM001","motivo":"Error orden Compra","area":"Despacho","valor":72.0},{"mes":"2026-03","fecha":"2026-03-05","dow":3,"sala":"SELECTOS GOTERA","ruta":"SSM001","motivo":"Diferencia Precios","area":"Sistemas","valor":3635.73}];
+
+const ACOLOR={Despacho:'#1a3550',Reparto:'#2980b9',Sistemas:'#c0392b',Produccion:'#27ae60',Digitador:'#8e44ad'};
+const DIAS=['Lun','Mar','Mié','Jue','Vie','Sáb'];
+
+let fM='all',fR='all',fA='all';
+let cPie,cArea,cMot;
+
+const fi=()=>DATA.filter(d=>(fM==='all'||d.mes===fM)&&(fR==='all'||d.ruta===fR)&&(fA==='all'||d.area===fA));
+const fmt=n=>'$'+Number(n).toLocaleString('es-SV',{minimumFractionDigits:2});
+
+function ra(){
+  rKPIs();rDays();rPie();rArea();rMot();rSala();rDet();
+}
+
+function rKPIs(){
+  const d=fi(),tot=d.reduce((s,r)=>s+r.valor,0);
+  document.getElementById('kpis').innerHTML=`
+    <div class="kcard k1"><div class="klbl">Total Reingresado</div><div class="kval c1">${fmt(tot)}</div></div>
+    <div class="kcard k2"><div class="klbl">Notas de Crédito</div><div class="kval c2">${d.length}</div></div>
+  `;
+}
+
+function rDays(){
+  const d=fi(),byD=new Array(6).fill(0);
+  d.forEach(r=>{if(r.dow<6)byD[r.dow]+=r.valor;});
+  const maxV=Math.max(...byD,1);
+  document.getElementById('days').innerHTML=DIAS.map((dia,i)=>`
+    <div class="day-col">
+      <div class="day-bar" style="height:${Math.max(5,Math.round(byD[i]/maxV*80))}px;background:#2980b9;"></div>
+      <div class="day-lbl">${dia}</div>
+    </div>`).join('');
+}
+
+function rPie(){
+  const d=fi(),byA={};d.forEach(r=>{byA[r.area]=(byA[r.area]||0)+r.valor;});
+  if(cPie)cPie.destroy();
+  cPie=new Chart(document.getElementById('cPie'),{type:'doughnut',data:{labels:Object.keys(byA),datasets:[{data:Object.values(byA),backgroundColor:Object.keys(byA).map(a=>ACOLOR[a]||'#888')}]},options:{maintainAspectRatio:false}});
+}
+
+function rArea(){
+  const d=fi(),byA={};d.forEach(r=>{byA[r.area]=(byA[r.area]||0)+r.valor;});
+  if(cArea)cArea.destroy();
+  cArea=new Chart(document.getElementById('cArea'),{type:'bar',data:{labels:Object.keys(byA),datasets:[{data:Object.values(byA),backgroundColor:'#1a3550'}]},options:{maintainAspectRatio:false}});
+}
+
+function rMot(){
+  const d=fi(),byM={};d.forEach(r=>{byM[r.motivo]=(byM[r.motivo]||0)+r.valor;});
+  if(cMot)cMot.destroy();
+  cMot=new Chart(document.getElementById('cMot'),{type:'bar',data:{labels:Object.keys(byM),datasets:[{data:Object.values(byM),backgroundColor:'#e67e22'}]},options:{indexAxis:'y',maintainAspectRatio:false}});
+}
+
+function rSala(){
+  const d=fi(),byS={};
+  d.forEach(r=>{if(!byS[r.sala])byS[r.sala]={v:0,r:r.ruta};byS[r.sala].v+=r.valor;});
+  document.getElementById('sala-tb').innerHTML=Object.entries(byS).map(([s,v])=>`
+    <tr><td>${s}</td><td>${v.r}</td><td class="r">${fmt(v.v)}</td><td class="r">-</td></tr>
+  `).join('');
+}
+
+function rDet(){
+  document.getElementById('det-tb').innerHTML=fi().map(r=>`
+    <tr><td>${r.fecha}</td><td>${r.sala}</td><td>${r.motivo}</td><td>${r.area}</td><td class="r">${fmt(r.valor)}</td></tr>
+  `).join('');
+}
+
+function showTab(t,btn){
+  document.querySelectorAll('.vp').forEach(p=>p.classList.remove('show'));
+  document.getElementById('tab-'+t).classList.add('show');
+}
+
+function setM(v,b){fM=v;ra();}
+function setR(v,b){fR=v;ra();}
+function setA(v,b){fA=v;ra();}
+
+ra();
+</script>
+</body>
+</html>
